@@ -15,7 +15,11 @@ Or, get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/r
 Get started by setting a password. You can temporarily set this:
 
 ```bash
+# on unix
 export CORNELLI_PASS="whateveryouwant"
+
+# on windows
+set CORNELLI_PASS=1234
 ```
 
 Then, by putting your thoughts away for a certain duration, you encrypt your letter away.:
