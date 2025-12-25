@@ -6,18 +6,11 @@ use cornelli::{
     commands::Runnable,
     core::ChristmasDB,
     log_err,
-    utils::sudo::run_with_noroot,
 };
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
     let args = Args::parse();
-
-    // sudo protection
-    if let Err(err) = run_with_noroot() {
-        log_err!("{err}");
-        exit(1);
-    }
 
     // set global flags' values
     set_accept_all(args.accept_all);
