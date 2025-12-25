@@ -4,6 +4,12 @@
 
 cornelli is your small terminal app for the times when you really desire to give your future self pats for the work you do; or for expressing any thoughts to them.
 
+```bash
+$ cargo install nelli
+```
+
+Or, get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/releases).
+
 </div>
 
 ## 🪄 Usage
@@ -29,7 +35,7 @@ Hopefully you'll enjoy what comes next! :3
 cargo build --release --locked
 ```
 
-# Why
+# 🪄 Why
 
 This is a Christmas project - a friend and I decided to spin up a friendly hackathon for building a time capsule of memories. And besides, what better way to set the mood for this day than creating something fun with the tools you have?
 
