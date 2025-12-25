@@ -63,6 +63,11 @@ impl ChristmasDB {
 
     async fn autosave(&self) -> Result<()> {
         let json = serde_json::to_string_pretty(self).context("Failed to serialize DB.")?;
+        let parent = self
+            .path
+            .parent()
+            .with_context(|| format!("Cannot create parent directories."))?;
+        fs::create_dir_all(parent).await?;
         fs::write(&self.path, json).await?;
         Ok(())
     }

@@ -1,4 +1,4 @@
-use std::{env, path::Path, process::exit};
+use std::{env, process::exit};
 
 use clap::Parser;
 use cornelli::{
@@ -31,14 +31,15 @@ async fn main() {
         }
     };
 
-    let mut db =
-        match ChristmasDB::load_from_pass(pass, Path::new("database.json").to_path_buf()).await {
-            Ok(db) => db,
-            Err(_) => {
-                log_err!("ChristmasDB failed to initialize.");
-                exit(1);
-            }
-        };
+    let db_path = dirs::config_dir().unwrap().join("cornelli/christmas.json");
+
+    let mut db = match ChristmasDB::load_from_pass(pass, db_path.to_path_buf()).await {
+        Ok(db) => db,
+        Err(_) => {
+            log_err!("ChristmasDB failed to initialize.");
+            exit(1);
+        }
+    };
 
     // command invocation
     let result = match &args.command {
