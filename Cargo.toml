@@ -16,7 +16,7 @@ anyhow = "1.0.100"
 anstyle = "1.0.13"
 async-trait = "0.1.89"
 nix = { version = "0.30.1", features = ["user"] }
-dialoguer = "0.11.0"
+dialoguer = "0.12.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.147"
 chrono = { version = "0.4.42", features = ["serde"] }
