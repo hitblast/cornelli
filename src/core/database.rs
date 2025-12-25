@@ -61,6 +61,14 @@ impl ChristmasDB {
         })
     }
 
+    pub fn path(&self) -> &PathBuf {
+        &self.path
+    }
+
+    pub fn list_capsules(&self) -> &[Capsule] {
+        &self.capsules
+    }
+
     async fn autosave(&self) -> Result<()> {
         let json = serde_json::to_string_pretty(self).context("Failed to serialize DB.")?;
         let parent = self
@@ -96,14 +104,6 @@ impl ChristmasDB {
 
         self.autosave().await?;
         Ok(())
-    }
-
-    pub fn list_capsules(&self) -> &[Capsule] {
-        &self.capsules
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.capsules.is_empty()
     }
 
     pub async fn decrypt(&mut self, cap: Capsule) -> Result<String> {

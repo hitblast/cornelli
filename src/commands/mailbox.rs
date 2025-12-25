@@ -49,13 +49,16 @@ impl Runnable for MailboxCmd {
             sleep(Duration::from_secs(3)).await;
             log_orb!("Oh...");
             sleep(Duration::from_secs(4)).await;
+            clear_terminal().await;
             log_orb!("I see...");
             sleep(Duration::from_secs(4)).await;
+            clear_terminal().await;
             log_orb!("Your mailbox has a few things...\n\n");
             sleep(Duration::from_secs(5)).await;
 
             if confirm_action("Do you want to proceed?") {
                 sleep(Duration::from_secs(1)).await;
+                clear_terminal().await;
                 log_orb!("In we go~");
                 sleep(Duration::from_secs(2)).await;
 
