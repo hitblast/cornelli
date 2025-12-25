@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🔮 write to your future self! <3
 
 cornelli is your small terminal app for the times when you really desire to give your future self pats for the work you do; or for expressing any thoughts to them.
@@ -9,8 +7,6 @@ $ cargo install nelli
 ```
 
 Or, get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/releases).
-
-</div>
 
 ## 🪄 Usage
 
