@@ -7,11 +7,11 @@ use anyhow::Result;
 #[derive(Debug, Args)]
 pub struct KeepCmd {
     /// The text to keep.
-    pub text: String,
+    text: String,
 
     /// The duration to keep for.
     #[arg(short, long)]
-    pub duration: String,
+    duration: String,
 }
 
 #[async_trait]
