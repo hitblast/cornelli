@@ -42,6 +42,7 @@ pub struct ChristmasDB {
 }
 
 impl ChristmasDB {
+    /// Attempts to create/load a ChristmasDB instance from a given password & path.
     pub async fn load_from_pass(password: String, path: PathBuf) -> Result<Self> {
         let mut key = [0u8; 32];
         pbkdf2_hmac::<Sha256>(
@@ -66,14 +67,17 @@ impl ChristmasDB {
         })
     }
 
+    /// Returns the path of the database instance.
     pub fn path(&self) -> &PathBuf {
         &self.path
     }
 
+    /// Returns a reference vector to all capsules.
     pub fn list_capsules(&self) -> &[Capsule] {
         &self.capsules
     }
 
+    /// Autosaves current ChristmasDB data to the given path.
     async fn autosave(&self) -> Result<()> {
         let json = serde_json::to_string_pretty(self).context("Failed to serialize DB.")?;
         let parent = self
@@ -85,6 +89,7 @@ impl ChristmasDB {
         Ok(())
     }
 
+    /// Ciphers a given text and adds to the capsule.
     pub async fn add_new_capsule(
         &mut self,
         text: String,
@@ -109,26 +114,33 @@ impl ChristmasDB {
         Ok(())
     }
 
-    pub async fn decrypt(&mut self, cap: Capsule) -> Result<String> {
-        if !cap.is_awaiting_decryption()? {
-            bail!("Cannot decrypt before the time happens.");
-        }
-
+    /// Acts as a non-invasive deciphering func without altering the actual database.
+    ///
+    /// Returns two things:
+    /// 1. The deciphered text, and
+    /// 2. The index of the capsule in the database at the time of removal.
+    ///
+    pub fn decrypt(&self, cap: &Capsule) -> Result<(String, usize)> {
         let mut data = cap.data.clone();
         let mut cipher = Aes256Ctr::new(&self.key.into(), &cap.nonce.into());
         cipher.apply_keystream(&mut data);
 
-        let text = String::from_utf8(data).context("Decryption produced invalid UTF-8.")?;
+        let text = String::from_utf8(data).context("Invalid UTF-8, possibly a faulty password?")?;
 
         let idx = self
             .capsules
             .iter()
-            .position(|x| *x == cap)
-            .context("Capsule not found!")?;
+            .position(|x| x == cap)
+            .context("Capsule not found! Did you delete it manually? :suspicious_eyes:")?;
 
+        Ok((text, idx))
+    }
+
+    /// Removes a capsule from a given index.
+    pub async fn remove(&mut self, idx: usize) -> Result<()> {
         self.capsules.remove(idx);
         self.autosave().await?;
 
-        Ok(text)
+        Ok(())
     }
 }

@@ -1,13 +1,11 @@
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 use async_trait::async_trait;
 use clap::Args;
 use tokio::{process::Command, time::sleep};
 
 use crate::{
-    commands::Runnable,
-    core::{ChristmasDB, database::Capsule},
-    log_letter, log_orb, log_sparkles,
+    commands::Runnable, core::ChristmasDB, log_letter, log_orb, log_sparkles,
     utils::confirm::confirm_action,
 };
 use anyhow::Result;
@@ -26,11 +24,13 @@ async fn clear_terminal() {
 #[async_trait]
 impl Runnable for MailboxCmd {
     async fn run(&self, db: &mut ChristmasDB) -> Result<()> {
-        let mut pending: Vec<Capsule> = vec![];
+        let mut pending: HashMap<usize, String> = HashMap::new();
 
         for capsule in db.capsules.iter() {
-            if capsule.is_awaiting_decryption()? {
-                pending.push(capsule.clone());
+            if capsule.is_awaiting_decryption()?
+                && let Ok((decrypted, index)) = db.decrypt(&capsule)
+            {
+                pending.insert(index, decrypted);
             }
         }
 
@@ -64,11 +64,11 @@ impl Runnable for MailboxCmd {
 
                 clear_terminal().await;
 
-                for capsule in pending {
-                    let text = db.decrypt(capsule).await?;
+                for (index, decrypted) in pending {
+                    db.remove(index).await?;
 
                     sleep(Duration::from_secs(3)).await;
-                    log_letter!("{text}");
+                    log_letter!("{decrypted}");
                     println!();
                     log_orb!("- Signed by you.");
                     println!();
