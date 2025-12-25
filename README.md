@@ -6,7 +6,7 @@ cornelli is your small terminal app for the times when you really desire to give
 
 </div>
 
-## Usage
+## 🪄 Usage
 
 Get started by putting your thoughts away for a certain duration:
 
@@ -23,11 +23,15 @@ nelli mailbox
 
 Hopefully you'll enjoy what comes next! :3
 
-## Compiling
+## ☘️ Compiling
 
 ```bash
 cargo build --release --locked
 ```
+
+# Why
+
+This is a Christmas project - a friend and I decided to spin up a friendly hackathon for building a time capsule of memories. And besides, what better way to set the mood for this day than creating something fun with the tools you have?
 
 ## License
 

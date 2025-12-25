@@ -1,4 +1,4 @@
-use std::{env, process::exit};
+use std::{env, path::Path, process::exit};
 
 use clap::Parser;
 use cornelli::{
@@ -31,7 +31,13 @@ async fn main() {
         }
     };
 
-    let db_path = dirs::config_dir().unwrap().join("cornelli/christmas.json");
+    let db_path = match dirs::config_dir() {
+        Some(path) => path.join("cornelli/christmas.json"),
+        None => {
+            log_err!("Config directory couldn't be determined, using current directory");
+            Path::new("christmas.json").to_path_buf()
+        }
+    };
 
     let mut db = match ChristmasDB::load_from_pass(pass, db_path.to_path_buf()).await {
         Ok(db) => db,
