@@ -53,7 +53,7 @@ impl Runnable for MailboxCmd {
             log_orb!("I see...");
             sleep(Duration::from_secs(4)).await;
             clear_terminal().await;
-            log_orb!("Your mailbox has a few things...\n\n");
+            log_orb!("Your mailbox has a few things...\n");
             sleep(Duration::from_secs(5)).await;
 
             if confirm_action("Do you want to proceed?") {
