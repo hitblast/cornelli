@@ -44,7 +44,12 @@ pub struct ChristmasDB {
 impl ChristmasDB {
     pub async fn load_from_pass(password: String, path: PathBuf) -> Result<Self> {
         let mut key = [0u8; 32];
-        pbkdf2_hmac::<Sha256>(password.as_bytes(), b"tasty salt", 100, &mut key);
+        pbkdf2_hmac::<Sha256>(
+            password.as_bytes(),
+            b"tasty salt",
+            password.len() as u32,
+            &mut key,
+        );
 
         let capsules = if path.try_exists()? {
             let data = fs::read_to_string(&path).await?;
