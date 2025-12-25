@@ -14,7 +14,13 @@ Or, get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/r
 
 ## 🪄 Usage
 
-Get started by putting your thoughts away for a certain duration:
+Get started by setting a password. You can temporarily set this:
+
+```bash
+export CORNELLI_PASS="whateveryouwant"
+```
+
+Then, by putting your thoughts away for a certain duration, you encrypt your letter away.:
 
 ```bash
 # unlocks after 20 days, 1 hour, 2 minutes and 1 second
