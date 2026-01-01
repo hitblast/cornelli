@@ -15,7 +15,7 @@ path = "src/main.rs"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 clap = { version = "4", features = ["derive"] }
-clap_complete = "4.5.62"
+clap_complete = "4.5.64"
 anyhow = "1.0.100"
 anstyle = "1.0.13"
 async-trait = "0.1.89"
