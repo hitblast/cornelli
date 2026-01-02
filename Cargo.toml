@@ -21,7 +21,7 @@ anstyle = "1.0.13"
 async-trait = "0.1.89"
 dialoguer = "0.11.0"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.147"
+serde_json = "1.0.148"
 chrono = { version = "0.4.42", features = ["serde"] }
 aes = "0.8.4"
 pbkdf2 = "0.12.2"
