@@ -4,8 +4,8 @@ description = "Write to your future self."
 repository = "https://github.com/hitblast/cornelli"
 readme = "README.md"
 license = "MIT"
-keywords = ["christmas", "time-capsule", "time-machine", "notes"]
-version = "1.2.0"
+keywords = ["christmas", "time-capsule", "diary", "notes", "journal"]
+version = "1.3.0"
 edition = "2024"
 
 [[bin]]
