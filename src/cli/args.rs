@@ -1,4 +1,4 @@
-use crate::commands::{BurnCmd, KeepCmd, MailboxCmd};
+use crate::commands::{BurnCmd, KeepCmd, MailboxCmd, PathCmd};
 
 use clap::{Parser, Subcommand};
 
@@ -17,4 +17,6 @@ pub enum Command {
     Mailbox(MailboxCmd),
     /// Burns the mailbox forever.
     Burn(BurnCmd),
+    /// Shows the path to the mailbox core.
+    Path(PathCmd),
 }

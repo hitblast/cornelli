@@ -1,7 +1,4 @@
-use std::{
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{fs, path::PathBuf};
 
 use aes::{
     Aes256,
@@ -14,21 +11,9 @@ use rand::{TryRngCore, rngs::OsRng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
-use crate::log_err;
+use crate::utils::path::get_database_path;
 
 type Aes256Ctr = ctr::Ctr64BE<Aes256>;
-
-fn get_database_path() -> PathBuf {
-    let db_path = match dirs::config_dir() {
-        Some(path) => path.join("cornelli/christmas.json"),
-        None => {
-            log_err!("Config directory couldn't be determined, using current directory...");
-            Path::new("christmas.json").to_path_buf()
-        }
-    };
-
-    db_path
-}
 
 #[derive(Deserialize, Serialize, Clone, PartialEq)]
 pub struct Capsule {
@@ -59,9 +44,8 @@ pub struct ChristmasDB {
 
 impl ChristmasDB {
     /// Initialize a ChristmasDB instance and load/save database/passwords.
-    pub fn init() -> Result<Self> {
-        let password = "test";
-        let path = get_database_path();
+    pub fn init(password: String) -> Result<Self> {
+        let path = get_database_path()?;
 
         let mut key = [0u8; 32];
         pbkdf2_hmac::<Sha256>(
@@ -86,18 +70,6 @@ impl ChristmasDB {
         })
     }
 
-    /// Returns the path of the database instance.
-    #[must_use]
-    pub fn path(&self) -> &PathBuf {
-        &self.path
-    }
-
-    /// Returns a reference vector to all capsules.
-    #[must_use]
-    pub fn list_capsules(&self) -> &[Capsule] {
-        &self.capsules
-    }
-
     /// Autosaves current ChristmasDB data to the given path.
     fn autosave(&self) -> Result<()> {
         let json = serde_json::to_string_pretty(self).context("Failed to serialize DB.")?;
@@ -108,6 +80,18 @@ impl ChristmasDB {
         fs::create_dir_all(parent)?;
         fs::write(&self.path, json)?;
         Ok(())
+    }
+
+    /// Returns the path of the database instance.
+    #[must_use]
+    pub fn path(&self) -> &PathBuf {
+        &self.path
+    }
+
+    /// Returns a reference vector to all capsules.
+    #[must_use]
+    pub fn list_capsules(&self) -> &[Capsule] {
+        &self.capsules
     }
 
     /// Ciphers a given text and adds to the capsule.
@@ -131,12 +115,9 @@ impl ChristmasDB {
         Ok(())
     }
 
-    /// Acts as a non-invasive deciphering func without altering the actual database.
+    /// Non-invasive capsule deciphering. Use `.remove()` to remove the capsule by index.
     ///
-    /// Returns two things:
-    /// 1. The deciphered text, and
-    /// 2. The index of the capsule in the database at the time of removal.
-    ///
+    /// Returns the decrypted text and the index of the capsule at the time of the removal.
     pub fn decrypt(&self, cap: &Capsule) -> Result<(String, usize)> {
         let mut data = cap.data.clone();
         let mut cipher = Aes256Ctr::new(&self.key.into(), &cap.nonce.into());

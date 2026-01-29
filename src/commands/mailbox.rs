@@ -1,26 +1,18 @@
-#[cfg(not(windows))]
-use std::process::Command;
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
 use async_trait::async_trait;
 use clap::Args;
 
 use crate::{
-    commands::Runnable, core::ChristmasDB, log_letter, log_orb, log_sparkles,
-    utils::confirm::confirm_action,
+    commands::Runnable,
+    core::ChristmasDB,
+    log_letter, log_orb, log_sparkles,
+    utils::io::{clear_terminal, confirm_action},
 };
 use anyhow::Result;
 
 #[derive(Debug, Args)]
 pub struct MailboxCmd;
-
-fn clear_terminal() {
-    #[cfg(windows)]
-    Command::new("cmd").args(["/C", "cls"]).status().ok();
-
-    #[cfg(not(windows))]
-    Command::new("clear").status().ok();
-}
 
 #[async_trait]
 impl Runnable for MailboxCmd {

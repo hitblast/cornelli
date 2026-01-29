@@ -6,12 +6,21 @@ use cornelli::{
     commands::Runnable,
     core::ChristmasDB,
     log_err,
+    utils::io::get_string_input,
 };
 
 fn main() {
     let args = Args::parse();
 
-    let mut db = match ChristmasDB::init() {
+    let password = match get_string_input("Enter your convenient, little password.") {
+        Ok(p) => p,
+        Err(e) => {
+            log_err!("{e}");
+            exit(1);
+        }
+    };
+
+    let mut db = match ChristmasDB::init(password) {
         Ok(db) => db,
         Err(e) => {
             log_err!("ChristmasDB failed to initialize: {e}");
@@ -24,6 +33,7 @@ fn main() {
         Command::Keep(cmd) => cmd.run(&mut db),
         Command::Burn(cmd) => cmd.run(&mut db),
         Command::Mailbox(cmd) => cmd.run(&mut db),
+        Command::Path(cmd) => cmd.run(&mut db),
     };
 
     if let Err(err) = result {

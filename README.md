@@ -16,21 +16,20 @@ brew install hitblast/tap/cornelli
 
 ### Pre-baked releases
 
-Get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/releases).
+Get the binary for your platform from the [GitHub Releases](https://github.com/hitblast/cornelli/releases) of this project if you don't have any of the package manager methods available above.
 
 <br>
 
 ## 🪄 Usage
 
-> [!WARNING]
-> If you're coming from an earlier version of cornelli, the v2 version doesn't use a `CORNELLI_PASS` environment variable as the core password is generated automatically and saved within the system keyring. This is a breaking change.
-
 Start by writing a letter to yourself:
 
 ```bash
 # unlocks after 20 days, 1 hour, 2 minutes and 1 second
-nelli keep "Miss the board games with friends?" -d 20d1h2m1s
+nelli keep "Miss the board games with friends?" -t 20d1h2m1s
 ```
+
+You'll be asked to enter a "password". This is what you'll use periodically to enter and access cornelli, so set something that you can remember.
 
 As time passes, let this command surprise you once in a while if you feel like it:
 
