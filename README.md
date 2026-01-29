@@ -22,36 +22,23 @@ Get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/relea
 
 ## 🪄 Usage
 
-Get started by setting a password. You can temporarily set this:
-
-```bash
-# on unix
-export CORNELLI_PASS="whateveryouwant"
-
-# on windows
-set CORNELLI_PASS=1234
-```
-
 > [!NOTE]
-> You may put this as your permanent environment variable but this **may be destructive for certain cases**. I would like to keep it this way since during execution, you can also pass the password *before* the command as a prefix.
+> The v2 version of cornelli doesn't require a `CORNELLI_PASS` environment variable as the core password is saved within the system keyring.
 
-Then, by putting your thoughts away for a certain duration, you encrypt your letter away.:
+Start by writing a letter to yourself:
 
 ```bash
 # unlocks after 20 days, 1 hour, 2 minutes and 1 second
 nelli keep "Miss the board games with friends?" -d 20d1h2m1s
 ```
 
-As time goes, let this command surprise you once in a while if you feel like it:
+As time passes, let this command surprise you once in a while if you feel like it:
 
 ```bash
 nelli mailbox
 ```
 
 Hopefully you'll enjoy what comes next! :3
-
-> [!NOTE]
-> On a special note - if you use different passes for different capsules, you can get a plethora of capsules which all unlock when different ones of these passwords are provided, not revealing them in an instant, at all.
 
 If you do wish to, however, make all your lost messages lost "forever", try:
 
@@ -62,8 +49,6 @@ nelli burn
 <br>
 
 ## ☘️ Compiling
-
-It's just a one-liner, use this command:
 
 ```bash
 cargo build --release --quiet --locked
