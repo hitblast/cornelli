@@ -1,4 +1,3 @@
-#[cfg(not(windows))]
 use std::process::Command;
 
 use anyhow::Result;
