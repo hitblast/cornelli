@@ -22,8 +22,8 @@ Get the goodie from [GitHub Releases](https://github.com/hitblast/cornelli/relea
 
 ## 🪄 Usage
 
-> [!NOTE]
-> The v2 version of cornelli doesn't require a `CORNELLI_PASS` environment variable as the core password is saved within the system keyring.
+> [!WARNING]
+> If you're coming from an earlier version of cornelli, the v2 version doesn't use a `CORNELLI_PASS` environment variable as the core password is generated automatically and saved within the system keyring. This is a breaking change.
 
 Start by writing a letter to yourself:
 
