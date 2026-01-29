@@ -15,5 +15,5 @@ use crate::core::ChristmasDB;
 /// Trait for all runnable commands.
 #[async_trait]
 pub trait Runnable {
-    async fn run(&self, db: &mut ChristmasDB) -> Result<()>;
+    fn run(&self, db: &mut ChristmasDB) -> Result<()>;
 }

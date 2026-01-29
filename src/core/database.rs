@@ -1,4 +1,7 @@
-use std::path::PathBuf;
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use aes::{
     Aes256,
@@ -10,9 +13,22 @@ use pbkdf2::pbkdf2_hmac;
 use rand::{TryRngCore, rngs::OsRng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
-use tokio::fs;
+
+use crate::log_err;
 
 type Aes256Ctr = ctr::Ctr64BE<Aes256>;
+
+fn get_database_path() -> PathBuf {
+    let db_path = match dirs::config_dir() {
+        Some(path) => path.join("cornelli/christmas.json"),
+        None => {
+            log_err!("Config directory couldn't be determined, using current directory...");
+            Path::new("christmas.json").to_path_buf()
+        }
+    };
+
+    db_path
+}
 
 #[derive(Deserialize, Serialize, Clone, PartialEq)]
 pub struct Capsule {
@@ -42,8 +58,11 @@ pub struct ChristmasDB {
 }
 
 impl ChristmasDB {
-    /// Attempts to create/load a ChristmasDB instance from a given password & path.
-    pub async fn load_from_pass(password: String, path: PathBuf) -> Result<Self> {
+    /// Initialize a ChristmasDB instance and load/save database/passwords.
+    pub fn init() -> Result<Self> {
+        let password = "test";
+        let path = get_database_path();
+
         let mut key = [0u8; 32];
         pbkdf2_hmac::<Sha256>(
             password.as_bytes(),
@@ -53,7 +72,7 @@ impl ChristmasDB {
         );
 
         let capsules = if path.try_exists()? {
-            let data = fs::read_to_string(&path).await?;
+            let data = fs::read_to_string(&path)?;
             let parsed: Self = serde_json::from_str(&data)?;
             parsed.capsules
         } else {
@@ -80,23 +99,19 @@ impl ChristmasDB {
     }
 
     /// Autosaves current ChristmasDB data to the given path.
-    async fn autosave(&self) -> Result<()> {
+    fn autosave(&self) -> Result<()> {
         let json = serde_json::to_string_pretty(self).context("Failed to serialize DB.")?;
         let parent = self
             .path
             .parent()
             .with_context(|| "Cannot create parent directories.".to_string())?;
-        fs::create_dir_all(parent).await?;
-        fs::write(&self.path, json).await?;
+        fs::create_dir_all(parent)?;
+        fs::write(&self.path, json)?;
         Ok(())
     }
 
     /// Ciphers a given text and adds to the capsule.
-    pub async fn add_new_capsule(
-        &mut self,
-        text: String,
-        should_be_kept_for: Duration,
-    ) -> Result<()> {
+    pub fn add_new_capsule(&mut self, text: String, should_be_kept_for: Duration) -> Result<()> {
         let mut data = text.into_bytes();
         let mut nonce = [0u8; 16];
         let mut rng = OsRng;
@@ -112,7 +127,7 @@ impl ChristmasDB {
             time_added: Local::now().naive_local(),
         });
 
-        self.autosave().await?;
+        self.autosave()?;
         Ok(())
     }
 
@@ -139,17 +154,17 @@ impl ChristmasDB {
     }
 
     /// Removes a capsule from a given index.
-    pub async fn remove(&mut self, idx: usize) -> Result<()> {
+    pub fn remove(&mut self, idx: usize) -> Result<()> {
         self.capsules.remove(idx);
-        self.autosave().await?;
+        self.autosave()?;
 
         Ok(())
     }
 
     /// Removes the entire database instance from memory.
-    pub async fn delete(&self) -> Result<()> {
+    pub fn delete(&self) -> Result<()> {
         if let Some(dir) = self.path.parent() {
-            fs::remove_dir_all(dir).await?;
+            fs::remove_dir_all(dir)?;
         }
 
         Ok(())

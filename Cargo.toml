@@ -13,7 +13,7 @@ name = "nelli"
 path = "src/main.rs"
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
+keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service"] }
 clap = { version = "4", features = ["derive"] }
 clap_complete = "4.5.64"
 anyhow = "1.0.100"

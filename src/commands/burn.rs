@@ -9,8 +9,8 @@ pub struct BurnCmd;
 
 #[async_trait]
 impl Runnable for BurnCmd {
-    async fn run(&self, db: &mut ChristmasDB) -> Result<()> {
-        db.delete().await?;
+    fn run(&self, db: &mut ChristmasDB) -> Result<()> {
+        db.delete()?;
 
         Ok(())
     }
