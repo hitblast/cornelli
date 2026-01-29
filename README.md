@@ -1,6 +1,6 @@
 # 🔮 write to your future self <3
 
-cornelli is your small terminal app for the times when you really desire to give your future self pats for the work you do; or for expressing any thoughts to them.
+*cornelli is your small terminal app for the times when you really desire to give your future self pats for the work you do; or for expressing any thoughts to them.*
 
 ### Universal install
 
@@ -16,7 +16,7 @@ brew install hitblast/tap/cornelli
 
 ### Pre-baked releases
 
-Get the binary for your platform from the [GitHub Releases](https://github.com/hitblast/cornelli/releases) of this project if you don't have any of the package manager methods available above.
+Get binaries for your platform [here](https://github.com/hitblast/cornelli/releases).
 
 <br>
 
