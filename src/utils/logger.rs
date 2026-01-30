@@ -40,21 +40,40 @@ pub fn _print_log(level: LogLevel, msg: &str) {
 
     if level == LogLevel::Error {
         eprintln!("{line}");
-    } else if level == LogLevel::Orb || level == LogLevel::Sparkles {
-        type_out(&line.to_string(), 20);
+    } else if level == LogLevel::Orb {
+        type_out(&line.to_string(), 20, true);
+    } else if level == LogLevel::Sparkles {
+        type_out(&line.to_string(), 20, false);
     } else {
-        type_out(&line.to_string(), 120);
+        type_out(&line.to_string(), 100, false);
     }
 }
 
-fn type_out(s: &str, ms: u64) {
+fn type_out(s: &str, ms: u64, dot: bool) {
     let mut out = io::stdout();
+    let dur = Duration::from_millis(ms);
 
     for c in s.chars() {
         out.write_all(c.to_string().as_bytes()).unwrap_or_default();
         out.flush().unwrap_or_default();
-        sleep(Duration::from_millis(ms));
+        sleep(dur);
     }
+
+    if dot {
+        let dot_dur = dur * 4;
+        for _ in 0..3 {
+            write!(out, ".").ok();
+            out.flush().ok();
+            sleep(dot_dur);
+            write!(out, ".").ok();
+            out.flush().ok();
+            sleep(dot_dur);
+            write!(out, "\x08 \x08\x08 \x08").ok();
+            out.flush().ok();
+            sleep(dot_dur);
+        }
+    }
+
     println!()
 }
 

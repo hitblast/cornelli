@@ -2,12 +2,10 @@
 mod burn;
 mod keep;
 mod mailbox;
-mod path;
 
 pub use burn::BurnCmd;
 pub use keep::KeepCmd;
 pub use mailbox::MailboxCmd;
-pub use path::PathCmd;
 
 use anyhow::Result;
 use async_trait::async_trait;

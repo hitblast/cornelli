@@ -39,20 +39,21 @@ impl Runnable for MailboxCmd {
         } else {
             clear_terminal();
 
-            sleep(Duration::from_secs(3));
-            log_orb!("Oh...");
+            sleep(Duration::from_secs(2));
+            log_orb!("Oh.");
             sleep(Duration::from_secs(4));
             clear_terminal();
-            log_orb!("I see...");
+            log_orb!("I see.");
             sleep(Duration::from_secs(4));
             clear_terminal();
-            log_orb!("Your mailbox has a few things...\n");
+            log_orb!("Your mailbox has a few things.");
+            println!();
             sleep(Duration::from_secs(5));
 
             if confirm_action("Do you want to proceed?") {
                 sleep(Duration::from_secs(1));
                 clear_terminal();
-                log_orb!("In we go~");
+                log_orb!("In we go.");
                 sleep(Duration::from_secs(2));
 
                 clear_terminal();

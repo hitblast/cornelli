@@ -12,7 +12,7 @@ impl Runnable for BurnCmd {
     fn run(&self, db: &mut ChristmasDB) -> Result<()> {
         clear_terminal();
         db.delete()?;
-        log_orb!("Forever burnt away...");
+        log_orb!("Forever burnt away.");
 
         Ok(())
     }

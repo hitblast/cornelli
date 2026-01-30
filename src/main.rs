@@ -5,17 +5,21 @@ use cornelli::{
     cli::{Args, args::Command},
     commands::Runnable,
     core::ChristmasDB,
-    log_err,
-    utils::io::get_string_input,
+    log_err, log_orb,
+    utils::io::clear_terminal,
 };
+use rpassword::prompt_password;
 
 fn main() {
     let args = Args::parse();
 
-    let password = match get_string_input("Enter your convenient, little password.") {
-        Ok(p) => p,
+    clear_terminal();
+    log_orb!("Print your convenient, little password.");
+
+    let password = match prompt_password("Put here (invisible):") {
+        Ok(some) => some,
         Err(e) => {
-            log_err!("{e}");
+            log_err!("Failed to grab password: {e}");
             exit(1);
         }
     };
@@ -33,7 +37,6 @@ fn main() {
         Command::Keep(cmd) => cmd.run(&mut db),
         Command::Burn(cmd) => cmd.run(&mut db),
         Command::Mailbox(cmd) => cmd.run(&mut db),
-        Command::Path(cmd) => cmd.run(&mut db),
     };
 
     if let Err(err) = result {
