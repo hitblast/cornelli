@@ -32,7 +32,6 @@ impl Runnable for MailboxCmd {
 
         if pending.is_empty() {
             clear_terminal();
-            sleep(Duration::from_secs(1));
             log_sparkles!("Looks like your letters are still spread across the abyss...\n");
             sleep(Duration::from_secs(3));
             clear_terminal();

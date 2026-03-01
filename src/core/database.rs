@@ -36,6 +36,7 @@ impl Capsule {
 #[derive(Deserialize, Serialize)]
 pub struct ChristmasDB {
     pub capsules: Vec<Capsule>,
+    pub salt: Option<[u8; 32]>,
     #[serde(skip)]
     key: [u8; 32],
     #[serde(skip)]
@@ -46,25 +47,29 @@ impl ChristmasDB {
     /// Initialize a ChristmasDB instance and load/save database/passwords.
     pub fn init(password: String) -> Result<Self> {
         let path = get_database_path()?;
-
-        let mut key = [0u8; 32];
-        pbkdf2_hmac::<Sha256>(
-            password.as_bytes(),
-            b"tasty salt",
-            password.len() as u32,
-            &mut key,
-        );
-
-        let capsules = if path.try_exists()? {
+        let (capsules, salt) = if path.try_exists()? {
             let data = fs::read_to_string(&path)?;
             let parsed: Self = serde_json::from_str(&data)?;
-            parsed.capsules
+
+            if let Some(salt) = parsed.salt {
+                (parsed.capsules, salt)
+            } else {
+                bail!(
+                    "An older version of ChristmasDB is being used; either revert to the previous version of cornelli, or use `nelli burn` to vanish it. Your secrets can't be read in this version!"
+                )
+            }
         } else {
-            Vec::new()
+            let mut salt = [0u8; 32];
+            OsRng.try_fill_bytes(&mut salt)?;
+            (Vec::new(), salt)
         };
+
+        let mut key = [0u8; 32];
+        pbkdf2_hmac::<Sha256>(password.as_bytes(), &salt, 600_000, &mut key);
 
         Ok(Self {
             capsules,
+            salt: Some(salt),
             key,
             path,
         })

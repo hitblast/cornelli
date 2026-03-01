@@ -27,7 +27,7 @@ fn main() {
     let mut db = match ChristmasDB::init(password) {
         Ok(db) => db,
         Err(e) => {
-            log_err!("ChristmasDB failed to initialize: {e}");
+            log_err!("Oh no! {e}");
             exit(1);
         }
     };
