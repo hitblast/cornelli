@@ -1,5 +1,5 @@
 > [!NOTE]
-> This repository is related to one of my blog posts: ["Christmas Eve and a battle to create a time capsule"](https://hitblast.fun/blog/building-a-time-capsule/)
+> This repository is related to one of my blog posts: ["Christmas Eve and a battle to create a time capsule"](https://hitblast.github.io/blog/building-a-time-capsule/)
 
 # 🔮 write to your future self <3
 
