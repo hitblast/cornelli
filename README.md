@@ -1,3 +1,6 @@
+> [!NOTE]
+> This repository is related to one of my blog posts: ["Christmas Eve and a battle to create a time capsule"](https://hitblast.fun/blog/building-a-time-capsule/)
+
 # 🔮 write to your future self <3
 
 *cornelli is your small terminal app for the times when you really desire to give your future self pats for the work you do; or for expressing any thoughts to them.*
