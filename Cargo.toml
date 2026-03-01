@@ -15,7 +15,7 @@ path = "src/main.rs"
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 clap_complete = "4.5.65"
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 anstyle = "1.0.13"
 async-trait = "0.1.89"
 dialoguer = "0.12.0"
