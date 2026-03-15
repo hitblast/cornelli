@@ -19,7 +19,7 @@ impl Runnable for MailboxCmd {
     fn run(&self, db: &mut ChristmasDB) -> Result<()> {
         let mut pending: HashMap<usize, String> = HashMap::new();
 
-        for capsule in db.capsules.iter() {
+        for capsule in db.list_capsules().iter() {
             if capsule.is_awaiting_decryption()?
                 && let Ok((decrypted, index)) = db.decrypt(capsule)
             {

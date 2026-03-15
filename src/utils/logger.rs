@@ -26,7 +26,7 @@ pub enum LogLevel {
 #[doc(hidden)]
 pub fn _print_log(level: LogLevel, msg: &str) {
     let tag = match level {
-        LogLevel::Error => "Error!",
+        LogLevel::Error => "Oh no!",
         LogLevel::Sparkles => "✨️",
         LogLevel::Orb => "🔮",
         LogLevel::Letter => "💌",

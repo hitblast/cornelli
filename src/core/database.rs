@@ -6,7 +6,10 @@ use aes::{
 };
 use anyhow::{Context, Result, bail};
 use chrono::{Duration, Local, NaiveDateTime};
-use pbkdf2::pbkdf2_hmac;
+use pbkdf2::{
+    hmac::{Hmac, Mac},
+    pbkdf2_hmac,
+};
 use rand::{TryRngCore, rngs::OsRng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
@@ -14,6 +17,9 @@ use sha2::Sha256;
 use crate::utils::path::get_database_path;
 
 type Aes256Ctr = ctr::Ctr64BE<Aes256>;
+type HmacSha256 = Hmac<Sha256>;
+
+const VERIFIER_MSG: &[u8] = b"cornelli-verifier-v1";
 
 #[derive(Deserialize, Serialize, Clone, PartialEq)]
 pub struct Capsule {
@@ -35,8 +41,9 @@ impl Capsule {
 
 #[derive(Deserialize, Serialize)]
 pub struct ChristmasDB {
-    pub capsules: Vec<Capsule>,
-    pub salt: Option<[u8; 32]>,
+    capsules: Vec<Capsule>,
+    salt: Option<[u8; 32]>,
+    verifier: Option<[u8; 32]>,
     #[serde(skip)]
     key: [u8; 32],
     #[serde(skip)]
@@ -47,12 +54,12 @@ impl ChristmasDB {
     /// Initialize a ChristmasDB instance and load/save database/passwords.
     pub fn init(password: String) -> Result<Self> {
         let path = get_database_path()?;
-        let (capsules, salt) = if path.try_exists()? {
+        let (capsules, salt, maybe_verifier) = if path.try_exists()? {
             let data = fs::read_to_string(&path)?;
             let parsed: Self = serde_json::from_str(&data)?;
 
             if let Some(salt) = parsed.salt {
-                (parsed.capsules, salt)
+                (parsed.capsules, salt, parsed.verifier)
             } else {
                 bail!(
                     "An older version of ChristmasDB is being used; either revert to the previous version of cornelli, or use `nelli burn` to vanish it. Your secrets can't be read in this version!"
@@ -61,18 +68,43 @@ impl ChristmasDB {
         } else {
             let mut salt = [0u8; 32];
             OsRng.try_fill_bytes(&mut salt)?;
-            (Vec::new(), salt)
+            (Vec::new(), salt, None)
         };
 
+        // derive key from provided password + salt
         let mut key = [0u8; 32];
         pbkdf2_hmac::<Sha256>(password.as_bytes(), &salt, 600_000, &mut key);
 
-        Ok(Self {
+        // add/verify using verifier text
+        let verifier_to_be_saved = if let Some(stored_verifier) = maybe_verifier {
+            let mut verify_mac = HmacSha256::new_from_slice(&key)?;
+            verify_mac.update(VERIFIER_MSG);
+            if verify_mac.verify_slice(&stored_verifier).is_err() {
+                bail!("Invalid password for this database!")
+            }
+
+            stored_verifier
+        } else {
+            // compute verifier tag
+            let mut mac = HmacSha256::new_from_slice(&key)?;
+            mac.update(VERIFIER_MSG);
+            let tag_bytes = mac.finalize().into_bytes();
+            let mut computed_verifier = [0u8; 32];
+            computed_verifier.copy_from_slice(&tag_bytes);
+
+            computed_verifier
+        };
+
+        let instance = Self {
             capsules,
             salt: Some(salt),
             key,
             path,
-        })
+            verifier: Some(verifier_to_be_saved),
+        };
+        instance.autosave()?;
+
+        Ok(instance)
     }
 
     /// Autosaves current ChristmasDB data to the given path.
