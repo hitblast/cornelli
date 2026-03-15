@@ -5,7 +5,7 @@ repository = "https://github.com/hitblast/cornelli"
 readme = "README.md"
 license = "MIT"
 keywords = ["christmas", "time-capsule", "diary", "notes", "journal"]
-version = "1.4.0"
+version = "1.4.1"
 edition = "2024"
 
 [[bin]]
@@ -14,14 +14,14 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
-clap_complete = "4.5.65"
-anyhow = "1.0.100"
-anstyle = "1.0.13"
+clap_complete = "4.6.0"
+anyhow = "1.0.102"
+anstyle = "1.0.14"
 async-trait = "0.1.89"
 dialoguer = "0.12.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
-chrono = { version = "0.4.43", features = ["serde"] }
+chrono = { version = "0.4.44", features = ["serde"] }
 aes = "0.8.4"
 pbkdf2 = "0.12.2"
 rand = "0.9.2"
