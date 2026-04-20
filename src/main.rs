@@ -6,14 +6,12 @@ use cornelli::{
     commands::Runnable,
     core::ChristmasDB,
     log_err, log_orb,
-    utils::io::clear_terminal,
 };
 use rpassword::prompt_password;
 
 fn main() {
     let args = Args::parse();
 
-    clear_terminal();
     log_orb!("Print your convenient, little password.");
 
     let password = match prompt_password("Put here (invisible):") {
