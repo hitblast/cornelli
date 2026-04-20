@@ -5,7 +5,7 @@ repository = "https://github.com/hitblast/cornelli"
 readme = "README.md"
 license = "MIT"
 keywords = ["christmas", "time-capsule", "diary", "notes", "journal"]
-version = "1.4.1"
+version = "1.4.2"
 edition = "2024"
 
 [[bin]]
