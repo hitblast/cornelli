@@ -10,7 +10,7 @@ use pbkdf2::{
     hmac::{Hmac, Mac},
     pbkdf2_hmac,
 };
-use rand::{TryRngCore, rngs::OsRng};
+use rand::{TryRng, rngs::SysRng};
 use serde::{Deserialize, Serialize};
 use sha2::Sha256;
 
@@ -67,7 +67,7 @@ impl ChristmasDB {
             }
         } else {
             let mut salt = [0u8; 32];
-            OsRng.try_fill_bytes(&mut salt)?;
+            SysRng.try_fill_bytes(&mut salt)?;
             (Vec::new(), salt, None)
         };
 
@@ -135,7 +135,7 @@ impl ChristmasDB {
     pub fn add_new_capsule(&mut self, text: String, should_be_kept_for: Duration) -> Result<()> {
         let mut data = text.into_bytes();
         let mut nonce = [0u8; 16];
-        let mut rng = OsRng;
+        let mut rng = SysRng;
         rng.try_fill_bytes(&mut nonce)?;
 
         let mut cipher = Aes256Ctr::new(&self.key.into(), &nonce.into());
